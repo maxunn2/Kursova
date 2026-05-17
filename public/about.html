@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Про нас — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .about-hero {
+      background: linear-gradient(135deg, var(--bg-nav) 0%, #1e3a6e 100%);
+      color: #fff;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    .about-hero__title {
+      font-family: var(--font-head);
+      font-size: 2.6rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    .about-hero__sub {
+      color: #94a3b8;
+      font-size: 1.15rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .stats-block {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: -50px auto 0;
+      max-width: 1100px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .stat-block {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .stat-block__num {
+      font-family: var(--font-head);
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .stat-block__lbl {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 6px;
+    }
+
+    .about-section {
+      padding: 60px 20px;
+    }
+    .about-section--gray { background: #f1f5f9; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .about-grid__img {
+      background: linear-gradient(135deg, #e8f0fe 0%, #dbe4ff 100%);
+      border-radius: var(--radius-lg);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7rem;
+    }
+    .about-grid__title {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    .about-grid__text {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+    .about-grid__text p { margin-bottom: 14px; }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .value-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      text-align: center;
+    }
+    .value-card__icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+    .value-card__title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+    .value-card__text {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .timeline {
+      max-width: 800px;
+      margin: 32px auto 0;
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 28px;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -34px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+    .timeline-year {
+      font-family: var(--font-head);
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    .timeline-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-hero__title { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="index.html" class="navbar__logo">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:90px;"/>
+  </a>
+  <div class="navbar__links">
+    <a href="index.html">Головна</a>
+    <a href="catalog.html">Каталог авто</a>
+    <a href="services.html">Наші послуги</a>
+    <a href="about.html" class="active">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+  <div class="navbar__actions" id="navbar-actions"></div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="about-hero">
+  <h1 class="about-hero__title">Про GlobalDrive Auto</h1>
+  <p class="about-hero__sub">
+    Ми — команда експертів, що допомагає українцям отримувати якісні авто з-за кордону. 
+    Прозоро, чесно і з гарантією.
+  </p>
+</div>
+
+<!-- ── СТАТИСТИКА ── -->
+<div class="stats-block">
+  <div class="stat-block">
+    <div class="stat-block__num">500+</div>
+    <div class="stat-block__lbl">Доставлених авто</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block__num">5</div>
+    <div class="stat-block__lbl">Років досвіду</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block__num">98%</div>
+    <div class="stat-block__lbl">Задоволених клієнтів</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block__num">24/7</div>
+    <div class="stat-block__lbl">Підтримка</div>
+  </div>
+</div>
+
+<!-- ── НАША ІСТОРІЯ ── -->
+<section class="about-section">
+  <div class="about-grid">
+    <div class="about-grid__img">🚗</div>
+    <div>
+      <h2 class="about-grid__title">Наша історія</h2>
+      <div class="about-grid__text">
+        <p>
+          GlobalDrive Auto почала свою роботу в 2021 році у Львові. 
+          Засновник компанії, маючи багаторічний досвід пригону авто з США, вирішив створити
+          сервіс, де клієнт отримує не просто автомобіль, а повний супровід угоди.
+        </p>
+        <p>
+          За 5 років роботи ми доставили понад 500 авто, налагодили відносини з провідними
+          аукціонами Copart та IAAI, маємо перевірених партнерів-логістів та СТО.
+        </p>
+        <p>
+          Сьогодні GlobalDrive Auto — це команда з 15 фахівців, яка щомісяця супроводжує
+          десятки угод по всій Україні.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── НАШІ ЦІННОСТІ ── -->
+<section class="about-section about-section--gray">
+  <div class="container">
+    <h2 class="section-title text-center">Наші цінності</h2>
+    <p class="section-sub text-center">Принципи, за якими ми працюємо</p>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-card__icon">🤝</div>
+        <div class="value-card__title">Прозорість</div>
+        <div class="value-card__text">
+          Усі ціни, документи та етапи доставки — у відкритому доступі для клієнта в особистому кабінеті
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-card__icon">⚡</div>
+        <div class="value-card__title">Швидкість</div>
+        <div class="value-card__text">
+          Відповідаємо на заявки протягом години. Не змушуємо клієнта чекати тижнями
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-card__icon">🛡️</div>
+        <div class="value-card__title">Гарантія</div>
+        <div class="value-card__text">
+          Підписуємо договір на кожну угоду. Ви захищені юридично на всіх етапах
+        </div>
+      </div>
+      <div class="value-card">
+        <div class="value-card__icon">💎</div>
+        <div class="value-card__title">Якість</div>
+        <div class="value-card__text">
+          Ретельно перевіряємо кожне авто за VIN. Не пропонуємо клієнту те, що б не купили самі
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ХРОНОЛОГІЯ ── -->
+<section class="about-section">
+  <div class="container">
+    <h2 class="section-title text-center">Етапи розвитку</h2>
+    <p class="section-sub text-center">Як ми росли разом з нашими клієнтами</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">2021</div>
+        <div class="timeline-text">
+          Заснування GlobalDrive Auto у Львові. Перша угода — Toyota Camry з аукціону Copart.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2022</div>
+        <div class="timeline-text">
+          Розширення команди. Налагоджена логістика з 3 портами Європи. 80+ доставлених авто.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2023</div>
+        <div class="timeline-text">
+          Власний майданчик у Львові на 30 авто. Партнерство з СТО для післяпродажного обслуговування.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2024</div>
+        <div class="timeline-text">
+          Запуск онлайн-системи трекінгу доставки для клієнтів. 300+ задоволених покупців.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2025</div>
+        <div class="timeline-text">
+          Запуск нового сайту з особистими кабінетами та повною автоматизацією заявок.
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2026</div>
+        <div class="timeline-text">
+          500+ доставлених авто. Команда з 15 спеціалістів. Робота по всій Україні.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section style="background:linear-gradient(135deg,var(--bg-nav) 0%,#1e3a6e 100%);padding:60px 20px;text-align:center;">
+  <h2 style="font-family:var(--font-head);font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:12px;">
+    Хочете стати нашим клієнтом?
+  </h2>
+  <p style="color:#94a3b8;margin-bottom:28px;">
+    Залиште заявку і ми підберемо для вас ідеальне авто
+  </p>
+  <a href="catalog.html" class="btn btn-primary btn-lg">🚗 Переглянути каталог</a>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:60px;margin:0 auto 12px;display:block;"/>
+    <p>📍 Львів, Україна &nbsp;|&nbsp; 📱 +380 98 639 79 81 &nbsp;|&nbsp; ✉️ info@globaldrive.ua</p>
+    <p style="font-size:0.8rem;color:#475569;margin-top:8px;">© 2026 GlobalDrive Auto. Всі права захищені.</p>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>renderNavUser();</script>
+</body>
+</html>

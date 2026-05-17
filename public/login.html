@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Вхід — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar__logo">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:100px;"/>
+  </a>
+  <div class="navbar__links">
+    <a href="index.html">Головна</a>
+    <a href="catalog.html">Каталог авто</a>
+    <a href="services.html">Наші послуги</a>
+    <a href="about.html">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+  <div class="navbar__actions">
+    <a href="register.html" class="btn btn-outline" style="color:#94a3b8;border-color:#334155;">Реєстрація</a>
+  </div>
+</nav>
+
+<!-- ФОРМА ВХОДУ -->
+<div class="auth-page">
+  <div class="auth-box">
+
+   <div class="auth-box__logo">
+      <div class="auth-box__logo-text">GlobalDrive <span>Auto</span> </div>
+    </div>
+
+    <h1 class="auth-box__title">Вхід в акаунт</h1>
+    <p class="auth-box__sub">Введіть ваш телефон та пароль</p>
+
+    <!-- Повідомлення про помилку/успіх -->
+    <div id="alert-box" style="display:none;" class="alert mb-16"></div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <div class="form-group">
+        <label for="phone">📱 Номер телефону *</label>
+        <input
+          type="tel"
+          id="phone"
+          class="form-control"
+          placeholder="+380XXXXXXXXX"
+          autocomplete="tel"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">🔒 Пароль *</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Введіть пароль"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button id="login-btn" class="btn btn-primary btn-lg btn-full" onclick="handleLogin()">
+        Увійти
+      </button>
+    </div>
+
+    <div class="auth-divider mt-16">або</div>
+
+    <p class="text-center text-sm text-muted mt-12">
+      Немає акаунту?
+      <a href="register.html" style="font-weight:600;">Зареєструватись</a>
+    </p>
+
+    <p class="text-center text-sm text-muted mt-8">
+      <a href="index.html">← Повернутись на головну</a>
+    </p>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  // Якщо вже залогінений — редірект
+  if (localStorage.getItem('token')) {
+    window.location.href = 'cabinet.html';
+  }
+
+  // Enter для відправки форми
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+</script>
+</body>
+</html>

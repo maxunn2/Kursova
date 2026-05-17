@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Адмін-панель — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body { background: #f7f8fc; }
+
+    /* ── Топ-бар адмінки ── */
+    .admin-topbar {
+      background: var(--bg-nav);
+      color: #fff;
+      padding: 0 24px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+    }
+    .admin-topbar__logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1rem;
+      color: #fff;
+      text-decoration: none;
+    }
+    .admin-topbar__logo img { height: 70px; }
+    .admin-topbar__badge {
+      background: var(--accent);
+      color: var(--bg-nav);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .admin-topbar__user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .admin-topbar__user-info {
+      text-align: right;
+    }
+    .admin-topbar__user-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .admin-topbar__user-role {
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+    .admin-topbar__avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg-nav);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ── Таблиця ── */
+    .data-table { font-size: 0.85rem; }
+    .data-table th { font-size: 0.72rem; }
+    .data-table td { padding: 10px 14px; }
+
+    .table-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .icon-btn {
+      width: 30px; height: 30px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+    }
+    .icon-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+    .icon-btn.danger:hover { background: #fee2e2; border-color: var(--danger); }
+
+    /* ── Toolbar пошуку ── */
+    .admin-toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .admin-toolbar input,
+    .admin-toolbar select {
+      max-width: 250px;
+    }
+    /* ── Приховати колонку закупки для не-адмінів ── */
+    body.is-manager .admin-only-col { display: none !important; }
+    /* ── Inline select (для зміни менеджера в таблиці) ── */
+    .inline-select {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      color: var(--text);
+      cursor: pointer;
+      max-width: 180px;
+      transition: all 0.15s;
+    }
+    .inline-select:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .inline-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+    /* ── Search context box ── */
+    .ctx-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      max-width: 280px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── ТОП-БАР ── -->
+<div class="admin-topbar">
+  <a href="admin.html" class="admin-topbar__logo">
+    <img src="images/logo.png" alt="GlobalDrive Auto"/>
+    <span class="admin-topbar__badge">Admin</span>
+  </a>
+  <div class="admin-topbar__user">
+    <div class="admin-topbar__user-info">
+      <div class="admin-topbar__user-name" id="user-name">—</div>
+      <div class="admin-topbar__user-role" id="user-role">—</div>
+    </div>
+    <div class="admin-topbar__avatar" id="user-avatar">—</div>
+    <button class="btn btn-ghost btn-sm" onclick="adminLogout()" 
+            style="color:#94a3b8;border-color:#334155;">
+      Вийти
+    </button>
+  </div>
+</div>
+
+<!-- ── ОСНОВНИЙ КОНТЕНТ ── -->
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar__title">Меню</div>
+    <a class="sidebar__link active" data-section="overview" onclick="showSection('overview', this)">
+      📊 &nbsp; Огляд
+    </a>
+    <a class="sidebar__link" data-section="requests" onclick="showSection('requests', this)">
+      📋 &nbsp; Заявки
+    </a>
+    <a class="sidebar__link" data-section="orders" onclick="showSection('orders', this)">
+      🚢 &nbsp; Замовлення
+    </a>
+
+    <div class="sidebar__title mt-24" id="admin-only-title">Адміністрування</div>
+    <a class="sidebar__link admin-only" data-section="cars" onclick="showSection('cars', this)">
+      🚗 &nbsp; Авто
+    </a>
+    <a class="sidebar__link" data-section="clients" onclick="showSection('clients', this)" id="link-clients">
+      👥 &nbsp; Клієнти
+    </a>
+    <a class="sidebar__link admin-only" data-section="employees" onclick="showSection('employees', this)">
+      👨‍💼 &nbsp; Персонал
+    </a>
+  </aside>
+
+  <!-- КОНТЕНТ -->
+  <main class="admin-content">
+
+    <!-- ── СЕКЦІЯ: ОГЛЯД ── -->
+    <section class="admin-section" id="section-overview">
+      <h1 class="section-title">📊 Огляд</h1>
+      <p class="section-sub">Загальна статистика по системі</p>
+
+      <div class="stats-row" id="stats-row">
+        <!-- Заповнюється через JS -->
+      </div>
+
+      <!-- Останні заявки -->
+      <div class="card">
+        <div class="flex-between mb-16">
+          <h3 style="font-family:var(--font-head);font-weight:700;">📋 Останні заявки</h3>
+          <a class="btn btn-outline btn-sm" onclick="showSection('requests', document.querySelector('[data-section=requests]'))">Всі заявки →</a>
+        </div>
+        <div id="recent-requests"></div>
+      </div>
+    </section>
+
+    <!-- ── СЕКЦІЯ: ЗАЯВКИ ── -->
+    <section class="admin-section" id="section-requests" style="display:none;">
+      <div class="flex-between mb-16">
+        <div>
+          <h1 class="section-title">📋 Заявки</h1>
+          <p class="section-sub">Управління заявками клієнтів</p>
+        </div>
+        <button class="btn btn-primary manager-only" onclick="openNewRequestModal()">➕ Нова заявка</button>
+      </div>
+
+      <div class="admin-toolbar">
+        <input type="text" id="req-search" class="form-control" placeholder="🔍 Пошук по імені або телефону..." oninput="filterRequests()"/>
+        <select id="req-filter-type" class="form-control" onchange="filterRequests()">
+          <option value="">Всі типи</option>
+          <option value="авто в наявності">Авто в наявності</option>
+          <option value="пригін під замовлення">Пригін під замовлення</option>
+          <option value="консультація">Консультація</option>
+        </select>
+        <select id="req-filter-status" class="form-control" onchange="filterRequests()">
+          <option value="">Всі статуси</option>
+          <option value="нова">Нова</option>
+          <option value="в обробці">В обробці</option>
+          <option value="погоджена">Погоджена</option>
+          <option value="закрита">Закрита</option>
+          <option value="відмінена">Відмінена</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Клієнт</th>
+              <th>Тип</th>
+              <th>Авто</th>
+              <th>Деталі</th>
+              <th>Менеджер</th>
+              <th>Статус</th>
+              <th>Дата</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="requests-tbody"></tbody>
+        </table>
+      </div>
+      <div id="requests-empty" class="empty-state" style="display:none;">
+        <div class="empty-state__icon">📋</div>
+        <div class="empty-state__title">Заявок не знайдено</div>
+      </div>
+    </section>
+
+    <!-- ── СЕКЦІЯ: ЗАМОВЛЕННЯ ── -->
+    <section class="admin-section" id="section-orders" style="display:none;">
+      <div class="flex-between mb-16">
+        <div>
+          <h1 class="section-title">🚢 Замовлення</h1>
+          <p class="section-sub">Договори та доставка авто</p>
+        </div>
+        <button class="btn btn-primary" onclick="openOrderModal()">➕ Нове замовлення</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Клієнт</th>
+              <th>Авто</th>
+              <th>Сума</th>
+              <th>Оплата</th>
+              <th>Статус</th>
+              <th>Менеджер</th>
+              <th>Дата</th>
+              <th>Оновлено</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+      </div>
+      <div id="orders-empty" class="empty-state" style="display:none;">
+        <div class="empty-state__icon">🚢</div>
+        <div class="empty-state__title">Замовлень ще немає</div>
+      </div>
+    </section>
+
+    <!-- ── СЕКЦІЯ: АВТО (тільки адмін) ── -->
+    <section class="admin-section" id="section-cars" style="display:none;">
+      <div class="flex-between mb-16">
+        <div>
+          <h1 class="section-title">🚗 Авто</h1>
+          <p class="section-sub">Каталог автомобілів</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCarModal()">➕ Додати авто</button>
+      </div>
+
+      <div class="admin-toolbar">
+        <input type="text" id="car-search" class="form-control" placeholder="🔍 Марка / модель / VIN" oninput="filterCars()"/>
+        <select id="car-filter-status" class="form-control" onchange="filterCars()">
+          <option value="">Всі статуси</option>
+          <option value="заброньовано">Заброньовано</option>
+          <option value="на аукціоні">На аукціоні</option>
+          <option value="в дорозі">В дорозі</option>
+          <option value="в наявності">В наявності</option>
+          <option value="продано">Продано</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Марка / Модель</th>
+              <th>Рік</th>
+              <th>VIN</th>
+              <th>Пальне</th>
+              <th>Пробіг</th>
+              <th class="admin-only-col">Закупка</th>
+              <th>Ціна</th>
+              <th>Статус</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cars-tbody"></tbody>
+        </table>
+      </div>
+      <div id="cars-empty" class="empty-state" style="display:none;">
+        <div class="empty-state__icon">🚗</div>
+        <div class="empty-state__title">Авто не знайдено</div>
+      </div>
+    </section>
+
+    <!-- ── СЕКЦІЯ: КЛІЄНТИ (тільки адмін) ── -->
+    <section class="admin-section" id="section-clients" style="display:none;">
+      <div class="flex-between mb-16">
+        <div>
+          <h1 class="section-title">👥 Клієнти</h1>
+          <p class="section-sub">База клієнтів (зареєстрованих + фізичних)</p>
+        </div>
+        <button class="btn btn-primary" onclick="openClientModal()">➕ Додати клієнта</button>
+      </div>
+
+      <div class="admin-toolbar">
+        <input type="text" id="client-search" class="form-control" placeholder="🔍 Пошук..." oninput="filterClients()"/>
+        <select id="client-filter-type" class="form-control" onchange="filterClients()">
+          <option value="">Всі типи</option>
+          <option value="фізична особа">Фізична особа</option>
+          <option value="юридична особа">Юридична особа</option>
+          <option value="vip">VIP</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ім'я</th>
+              <th>Телефон</th>
+              <th>Email</th>
+              <th>Тип</th>
+              <th>Реєстрація</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="clients-tbody"></tbody>
+        </table>
+      </div>
+      <div id="clients-empty" class="empty-state" style="display:none;">
+        <div class="empty-state__icon">👥</div>
+        <div class="empty-state__title">Клієнтів не знайдено</div>
+      </div>
+    </section>
+
+    <!-- ── СЕКЦІЯ: ПЕРСОНАЛ (тільки адмін) ── -->
+    <section class="admin-section" id="section-employees" style="display:none;">
+      <div class="flex-between mb-16">
+        <div>
+          <h1 class="section-title">👨‍💼 Персонал</h1>
+          <p class="section-sub">Адміністратори та менеджери</p>
+        </div>
+        <button class="btn btn-primary" onclick="openEmployeeModal()">➕ Додати співробітника</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ПІБ</th>
+              <th>Email</th>
+              <th>Телефон</th>
+              <th>Посада</th>
+              <th>Дата прийому</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="employees-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ── МОДАЛКА: НОВА ЗАЯВКА (для менеджера) ── -->
+<div class="modal-overlay" id="new-request-modal">
+  <div class="modal" style="max-width: 580px;">
+    <div class="modal__header">
+      <h3 class="modal__title">➕ Нова заявка</h3>
+      <button class="modal__close" onclick="closeModal('new-request-modal')">✕</button>
+    </div>
+    <div id="nrm-alert" style="display:none;" class="alert mb-16"></div>
+
+    <p class="text-muted text-sm mb-16">
+      Заявка від клієнта що звернувся фізично або по телефону
+    </p>
+
+    <div class="form-group">
+      <label>Клієнт *</label>
+      <select id="nrm-client" class="form-control">
+        <option value="">— Оберіть клієнта —</option>
+      </select>
+      <span class="form-hint">Якщо клієнта немає — спочатку додайте його в розділі "Клієнти"</span>
+    </div>
+
+    <div class="form-group mt-16">
+      <label>Тип заявки *</label>
+      <select id="nrm-type" class="form-control">
+        <option value="авто в наявності">Авто в наявності</option>
+        <option value="пригін під замовлення">Пригін під замовлення</option>
+        <option value="консультація">Консультація</option>
+      </select>
+    </div>
+
+    <div class="form-group mt-16" id="nrm-car-group">
+      <label>Авто (якщо є конкретне)</label>
+      <select id="nrm-car" class="form-control">
+        <option value="">— Не вказувати —</option>
+      </select>
+    </div>
+
+    <div class="form-group mt-16">
+      <label>Коментар (побажання клієнта)</label>
+      <textarea id="nrm-comment" class="form-control" placeholder="Наприклад: BMW, дизель, пробіг до 100 тис..."></textarea>
+    </div>
+
+    <button class="btn btn-primary btn-full mt-16" onclick="saveNewRequest()">💾 Створити заявку</button>
+  </div>
+</div>
+
+<!-- ── МОДАЛКА: РЕДАГУВАННЯ ЗАЯВКИ ── -->
+<div class="modal-overlay" id="request-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">📋 Заявка #<span id="rm-id"></span></h3>
+      <button class="modal__close" onclick="closeModal('request-modal')">✕</button>
+    </div>
+    <div id="rm-body"></div>
+    <div class="form-group mt-16">
+      <label>Змінити статус</label>
+      <select id="rm-status" class="form-control">
+ <option value="новий">Новий</option>
+        <option value="в обробці">В обробці</option>
+        <option value="виконано">Виконано</option>
+        <option value="скасовано">Скасовано</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-full mt-16" onclick="saveRequestStatus()">💾 Зберегти</button>
+  </div>
+</div>
+
+<!-- ── МОДАЛКА: ДОДАТИ/РЕДАГУВАТИ АВТО ── -->
+<div class="modal-overlay" id="car-modal">
+  <div class="modal" style="max-width: 720px;">
+    <div class="modal__header">
+      <h3 class="modal__title" id="cm-title">🚗 Додати авто</h3>
+      <button class="modal__close" onclick="closeModal('car-modal')">✕</button>
+    </div>
+    <div id="cm-alert" style="display:none;" class="alert mb-16"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Марка *</label>
+        <input id="cm-make" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>Модель *</label>
+        <input id="cm-model" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>Рік випуску</label>
+        <input id="cm-year" class="form-control" type="number" placeholder="2020"/>
+      </div>
+      <div class="form-group">
+        <label>VIN-код</label>
+        <input id="cm-vin" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>Тип пального</label>
+        <select id="cm-fuel" class="form-control">
+          <option value="">—</option>
+          <option value="бензин">Бензин</option>
+          <option value="дизель">Дизель</option>
+          <option value="електро">Електро</option>
+          <option value="гібрид">Гібрид</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Коробка</label>
+        <select id="cm-trans" class="form-control">
+          <option value="">—</option>
+          <option value="автомат">Автомат</option>
+          <option value="механіка">Механіка</option>
+          <option value="варіатор">Варіатор</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Колір</label>
+        <input id="cm-color" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>Об'єм двигуна (л)</label>
+        <input id="cm-engine" class="form-control" type="number" step="0.1" placeholder="2.0"/>
+      </div>
+      <div class="form-group">
+        <label>Привід</label>
+        <select id="cm-drive" class="form-control">
+          <option value="">—</option>
+          <option value="передній">Передній</option>
+          <option value="задній">Задній</option>
+          <option value="повний">Повний</option>
+        </select>
+      </div> 
+      <div class="form-group">
+        <label>Пробіг (км)</label>
+        <input id="cm-odo" class="form-control" type="number"/>
+      </div>
+      <div class="form-group" id="cm-purchase-group" style="display:none;">
+        <label>💼 Ціна закупки ($)</label>
+        <input id="cm-purchase" class="form-control" type="number"/>
+        <span class="form-hint">Тільки для адміна</span>
+      </div>
+      <div class="form-group">
+        <label>💰 Ціна продажу ($)</label>
+        <input id="cm-price" class="form-control" type="number"/>
+        <span class="form-hint">Що бачить клієнт у каталозі</span>
+      </div>
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label>📷 Фото авто</label>
+        <input type="file" id="cm-image-file" accept="image/*" class="form-control" style="padding:6px;"/>
+        <div id="cm-image-preview" style="margin-top:10px;display:none;">
+          <img id="cm-image-current" style="max-width:200px;border-radius:8px;border:1px solid var(--border);"/>
+        </div>
+        <span class="form-hint">Формат: JPG, PNG, WEBP. Максимум 5 МБ</span>
+      </div>
+      <div class="form-group">
+        <label>Статус *</label>
+        <select id="cm-status" class="form-control">
+          <option value="заброньовано">🔒 Заброньовано (для клієнта)</option>
+          <option value="на аукціоні">🔨 На аукціоні</option>
+          <option value="в дорозі">🚢 В дорозі</option>
+          <option value="в наявності">✅ В наявності</option>
+          <option value="продано">Продано</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full mt-16" onclick="saveCar()">💾 Зберегти</button>
+  </div>
+</div>
+
+<!-- ── МОДАЛКА: ДОДАТИ/РЕДАГУВАТИ КЛІЄНТА ── -->
+<div class="modal-overlay" id="client-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title" id="clm-title">👤 Редагувати клієнта</h3>
+      <button class="modal__close" onclick="closeModal('client-modal')">✕</button>
+    </div>
+    <div id="clm-alert" style="display:none;" class="alert mb-16"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Ім'я</label>
+        <input id="clm-first" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>Прізвище</label>
+        <input id="clm-last" class="form-control"/>
+      </div>
+    </div>
+    <div class="form-group mt-16">
+      <label>Телефон</label>
+      <input id="clm-phone" class="form-control" disabled/>
+    </div>
+    <div class="form-group mt-16">
+      <label>Email</label>
+      <input id="clm-email" class="form-control"/>
+    </div>
+    <div class="form-group mt-16">
+      <label>Тип клієнта</label>
+      <select id="clm-type" class="form-control">
+        <option value="фізична особа">Фізична особа</option>
+        <option value="юридична особа">Юридична особа</option>
+        <option value="vip">VIP</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-full mt-16" onclick="saveClient()">💾 Зберегти</button>
+  </div>
+</div>
+
+<!-- ── МОДАЛКА: ДОДАТИ/РЕДАГУВАТИ СПІВРОБІТНИКА ── -->
+<div class="modal-overlay" id="employee-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title" id="em-title">👨‍💼 Додати співробітника</h3>
+      <button class="modal__close" onclick="closeModal('employee-modal')">✕</button>
+    </div>
+    <div id="em-alert" style="display:none;" class="alert mb-16"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Ім'я *</label>
+        <input id="em-first" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label>Прізвище *</label>
+        <input id="em-last" class="form-control"/>
+      </div>
+    </div>
+    <div class="form-group mt-16">
+      <label>Телефон *</label>
+      <input id="em-phone" class="form-control"/>
+    </div>
+    <div class="form-group mt-16">
+      <label>Email</label>
+      <input id="em-email" class="form-control"/>
+    </div>
+    <div class="form-group mt-16">
+      <label>Посада *</label>
+      <select id="em-position" class="form-control">
+        <option value="Менеджер авто в наявності">Менеджер авто в наявності</option>
+        <option value="Менеджер з пригону">Менеджер з пригону</option>
+        <option value="Адміністратор">Адміністратор</option>
+      </select>
+    </div>
+    <div class="form-group mt-16" id="em-pwd-group">
+      <label>Пароль (для входу в систему)</label>
+      <input id="em-password" class="form-control" type="password" placeholder="Мінімум 6 символів"/>
+      <span class="form-hint">Залиште порожнім, якщо не змінюєте</span>
+    </div>
+    <button class="btn btn-primary btn-full mt-16" onclick="saveEmployee()">💾 Зберегти</button>
+  </div>
+</div>
+<!-- ── МОДАЛКА: ЕТАПИ ДОСТАВКИ ── -->
+<div class="modal-overlay" id="tracking-modal">
+  <div class="modal" style="max-width: 640px;">
+    <div class="modal__header">
+      <h3 class="modal__title">📍 Етапи доставки замовлення #<span id="tm-order-id"></span></h3>
+      <button class="modal__close" onclick="closeModal('tracking-modal')">✕</button>
+    </div>
+
+    <div id="tm-alert" style="display:none;" class="alert mb-16"></div>
+
+    <!-- Існуючі етапи -->
+    <h4 style="font-family:var(--font-head);font-weight:700;font-size:0.95rem;margin-bottom:12px;">
+      Поточні етапи
+    </h4>
+    <div id="tm-list" style="margin-bottom:24px;"></div>
+
+    <!-- Додати новий етап -->
+    <h4 style="font-family:var(--font-head);font-weight:700;font-size:0.95rem;margin-bottom:12px;border-top:1px solid var(--border);padding-top:20px;">
+      ➕ Додати новий етап
+    </h4>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Локація *</label>
+        <input id="tm-location" class="form-control" placeholder="Наприклад: Порт Балтимор"/>
+      </div>
+      <div class="form-group">
+        <label>Дата</label>
+        <input id="tm-date" class="form-control" type="date"/>
+      </div>
+    </div>
+    <div class="form-group mt-16">
+      <label>Опис етапу</label>
+      <textarea id="tm-desc" class="form-control" placeholder="Завантажено на корабель..."></textarea>
+    </div>
+    <div class="form-group mt-16">
+      <label>Орієнтовна дата прибуття</label>
+      <input id="tm-eta" class="form-control" type="date"/>
+    </div>
+    <button class="btn btn-primary btn-full mt-16" onclick="addTrackingStep()">
+      ➕ Додати етап
+    </button>
+  </div>
+</div>
+
+<!-- ── МОДАЛКА: ЗАМОВЛЕННЯ + ТРЕКЕР ── -->
+<div class="modal-overlay" id="order-modal">
+  <div class="modal" style="max-width: 720px;">
+    <div class="modal__header">
+      <h3 class="modal__title" id="om-title">🚢 Замовлення</h3>
+      <button class="modal__close" onclick="closeModal('order-modal')">✕</button>
+    </div>
+    <div id="om-alert" style="display:none;" class="alert mb-16"></div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Клієнт *</label>
+        <select id="om-client" class="form-control"></select>
+      </div>
+      <div class="form-group">
+        <label>Авто *</label>
+        <select id="om-car" class="form-control"></select>
+      </div>
+      <div class="form-group">
+        <label>Менеджер *</label>
+        <select id="om-employee" class="form-control"></select>
+      </div>
+    <div class="form-group">
+        <label>Ціна авто (з каталогу)</label>
+        <input id="om-car-price" class="form-control" type="text" disabled style="background:#f8fafc;"/>
+        <span class="form-hint">Автоматично з обраного авто</span>
+      </div>
+      <div class="form-group">
+        <label>💵 Сплачено клієнтом ($)</label>
+        <input id="om-amount" class="form-control" type="number" placeholder="0"/>
+        <span class="form-hint">Завдаток або повна оплата</span>
+      </div>
+      <div class="form-group">
+        <label>Статус оплати</label>
+        <select id="om-payment" class="form-control">
+<option value="очікує оплати">Очікує оплати</option>
+          <option value="частково сплачено">Частково сплачено</option>
+          <option value="оплачено">Оплачено</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Статус замовлення</label>
+        <select id="om-status" class="form-control">
+  <option value="новий">Новий</option>
+          <option value="в процесі">В процесі</option>
+          <option value="завершено">Завершено</option>
+          <option value="скасовано">Скасовано</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full mt-16" onclick="saveOrder()">💾 Зберегти</button>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

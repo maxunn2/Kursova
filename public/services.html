@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Наші послуги — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+    .service-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius);
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+    }
+    .service-card__title {
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .service-card__text {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 0.92rem;
+    }
+    .service-card__list {
+      list-style: none;
+      padding: 0;
+      margin: 14px 0 0;
+    }
+    .service-card__list li {
+      padding: 6px 0;
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+    .service-card__list li::before {
+      content: "✓";
+      color: var(--success);
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .pricing-table {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 24px;
+    }
+    .pricing-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pricing-table th {
+      background: var(--bg-nav);
+      color: #fff;
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .pricing-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table tr:hover { background: #f8fafc; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="index.html" class="navbar__logo">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:90px;"/>
+  </a>
+  <div class="navbar__links">
+    <a href="index.html">Головна</a>
+    <a href="catalog.html">Каталог авто</a>
+    <a href="services.html" class="active">Наші послуги</a>
+    <a href="about.html">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+  <div class="navbar__actions" id="navbar-actions"></div>
+</nav>
+
+<!-- ── HERO ── -->
+<div style="background:linear-gradient(135deg,var(--bg-nav) 0%,#1e3a6e 100%);padding:60px 20px;">
+  <div class="container">
+    <h1 style="font-family:var(--font-head);font-size:2.4rem;font-weight:800;color:#fff;margin-bottom:12px;">
+      Наші послуги
+    </h1>
+    <p style="color:#94a3b8;font-size:1.1rem;max-width:600px;">
+      Повний цикл супроводу — від вибору авто на аукціоні до отримання ключів в Україні
+    </p>
+  </div>
+</div>
+
+<!-- ── ОСНОВНИЙ КОНТЕНТ ── -->
+<div class="page-wrapper">
+
+  <!-- 6 КАРТОК ПОСЛУГ -->
+  <div class="services-grid">
+
+    <div class="service-card">
+      <div class="service-card__icon">🌎</div>
+      <div class="service-card__title">Пригін авто з США</div>
+      <div class="service-card__text">
+        Підбираємо та купуємо авто на аукціонах Copart, IAAI, Manheim. Працюємо з усіма штатами.
+      </div>
+      <ul class="service-card__list">
+        <li>Перевірка історії авто за VIN</li>
+        <li>Оцінка реальної вартості ремонту</li>
+        <li>Викуп авто від вашого імені</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card__icon">🚢</div>
+      <div class="service-card__title">Логістика та доставка</div>
+      <div class="service-card__text">
+        Працюємо з перевіреними логістичними партнерами — морська доставка в порт Клайпеди або Гданська, далі автовозом до Львова.
+      </div>
+      <ul class="service-card__list">
+        <li>Страхування на час доставки</li>
+        <li>Онлайн трекінг в реальному часі</li>
+        <li>Термін доставки 30-45 днів</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card__icon">📋</div>
+      <div class="service-card__title">Розмитнення</div>
+      <div class="service-card__text">
+        Повний пакет документів для розмитнення в Україні. Робимо все за вас — ви тільки отримуєте готове авто.
+      </div>
+      <ul class="service-card__list">
+        <li>Розрахунок мита заздалегідь</li>
+        <li>Проходження митниці під ключ</li>
+        <li>Оформлення документів</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card__icon">🔧</div>
+      <div class="service-card__title">Ремонт та відновлення</div>
+      <div class="service-card__text">
+        Співпрацюємо з перевіреними партнерськими СТО у Львові. Організуємо повний ремонт авто після аукціону.
+      </div>
+      <ul class="service-card__list">
+        <li>Кузовний ремонт</li>
+        <li>Заміна агрегатів</li>
+        <li>Покраска та полірування</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card__icon">📑</div>
+      <div class="service-card__title">Реєстрація в МРЕВ</div>
+      <div class="service-card__text">
+        Допомагаємо з постановкою на облік у Сервісному центрі МВС. Економимо ваш час.
+      </div>
+      <ul class="service-card__list">
+        <li>Підготовка всіх документів</li>
+        <li>Запис на огляд</li>
+        <li>Отримання номерних знаків</li>
+      </ul>
+    </div>
+
+    <div class="service-card">
+      <div class="service-card__icon">💼</div>
+      <div class="service-card__title">Авто з наявності</div>
+      <div class="service-card__text">
+        Купуйте авто, що вже на нашому майданчику у Львові. Можна оглянути, потестувати і забрати сьогодні.
+      </div>
+      <ul class="service-card__list">
+        <li>Огляд та тест-драйв</li>
+        <li>Перевірка документів</li>
+        <li>Оформлення за 1 день</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ТАБЛИЦЯ ВАРТОСТІ -->
+  <h2 class="section-title mt-32">Орієнтовна вартість послуг</h2>
+  <p class="section-sub">Точну ціну розрахуємо для вашого конкретного випадку</p>
+
+  <div class="pricing-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Послуга</th>
+          <th>Орієнтовна вартість</th>
+          <th>Термін</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>🌎 Підбір авто на аукціоні</strong></td>
+          <td>$300 - 500</td>
+          <td>1-3 дні</td>
+        </tr>
+        <tr>
+          <td><strong>🚢 Доставка з США</strong></td>
+          <td>$1500 - 2500</td>
+          <td>30-45 днів</td>
+        </tr>
+        <tr>
+          <td><strong>📋 Розмитнення</strong></td>
+          <td>Від $800</td>
+          <td>3-5 днів</td>
+        </tr>
+        <tr>
+          <td><strong>🔧 Ремонт після аукціону</strong></td>
+          <td>Залежно від стану</td>
+          <td>7-21 день</td>
+        </tr>
+        <tr>
+          <td><strong>📑 Реєстрація в МРЕВ</strong></td>
+          <td>$100 - 150</td>
+          <td>1-2 дні</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CTA -->
+  <div class="card mt-32" style="text-align:center;background:linear-gradient(135deg,var(--primary-light) 0%,#e0e7ff 100%);border:none;padding:40px;">
+    <h3 style="font-family:var(--font-head);font-size:1.5rem;font-weight:800;margin-bottom:12px;">
+      Готові розпочати?
+    </h3>
+    <p class="text-muted mb-16">
+      Оберіть авто та залиште заявку - менеджер зв'яжеться з вами протягом години
+    </p>
+    <a href="catalog.html" class="btn btn-primary btn-lg">📋 Обрати авто</a>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:100px;margin:0 auto 12px;display:block;"/>
+    <p>📍 Львів, Україна &nbsp;|&nbsp; 📱 +380 98 639 79 81 &nbsp;|&nbsp; ✉️ info@globaldrive.ua</p>
+    <p style="font-size:0.8rem;color:#475569;margin-top:8px;">© 2026 GlobalDrive Auto. Всі права захищені.</p>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script>renderNavUser();</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Адмін-панель — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    body {
+      background: linear-gradient(135deg, var(--bg-nav) 0%, #1e3a6e 100%);
+      min-height: 100vh;
+    }
+    .admin-auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .admin-auth-box {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-nav);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-auth-page">
+  <div class="admin-auth-box">
+
+    <div class="text-center mb-24">
+      <img src="images/logo.png" alt="GlobalDrive Auto" style="height:70px;margin:0 auto 12px;"/>
+      <div class="admin-badge">🔒 Службовий вхід</div>
+      <h1 style="font-family:var(--font-head);font-size:1.4rem;font-weight:800;margin-bottom:6px;">
+        Панель керування
+      </h1>
+      <p class="text-muted text-sm">Вхід для адміністраторів та менеджерів</p>
+    </div>
+
+    <div id="alert-box" style="display:none;" class="alert mb-16"></div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <div class="form-group">
+        <label for="email">📧 Робочий email</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          placeholder="admin@globaldrive.ua"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">🔒 Пароль</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Введіть пароль"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button id="login-btn" class="btn btn-primary btn-lg btn-full" onclick="handleAdminLogin()">
+        Увійти
+      </button>
+    </div>
+
+    <p class="text-center text-sm text-muted mt-24">
+      <a href="index.html">← Повернутись на сайт</a>
+    </p>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  // Якщо вже залогінений як адмін — редірект
+  if (localStorage.getItem('admin_token')) {
+    window.location.href = 'admin.html';
+  }
+
+  async function handleAdminLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const alertEl  = document.getElementById('alert-box');
+    const btn      = document.getElementById('login-btn');
+
+    alertEl.style.display = 'none';
+
+    if (!email || !password) {
+      alertEl.className = 'alert alert-error mb-16';
+      alertEl.innerHTML = '❌ Введіть email і пароль!';
+      alertEl.style.display = 'flex';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Вхід...';
+
+    try {
+      const res = await fetch(`${API}/admin-auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alertEl.className = 'alert alert-error mb-16';
+        alertEl.innerHTML = `❌ ${data.error || 'Помилка'}`;
+        alertEl.style.display = 'flex';
+        btn.disabled = false;
+        btn.textContent = 'Увійти';
+        return;
+      }
+
+      // Зберігаємо ОКРЕМО від клієнтського токена
+      localStorage.setItem('admin_token', data.token);
+      localStorage.setItem('admin_employee', JSON.stringify(data.employee));
+
+      alertEl.className = 'alert alert-success mb-16';
+      alertEl.innerHTML = '✅ Вхід успішний!';
+      alertEl.style.display = 'flex';
+
+      setTimeout(() => {
+        window.location.href = 'admin.html';
+      }, 600);
+
+    } catch (err) {
+      alertEl.className = 'alert alert-error mb-16';
+      alertEl.innerHTML = '❌ Сервер недоступний!';
+      alertEl.style.display = 'flex';
+      btn.disabled = false;
+      btn.textContent = 'Увійти';
+    }
+  }
+
+  // Enter для входу
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleAdminLogin();
+  });
+</script>
+</body>
+</html>

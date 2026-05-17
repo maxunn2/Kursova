@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Реєстрація — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="navbar__logo"><img src="images/logo.png" alt="GlobalDrive Auto" style="height:100px;"/></a>
+  <div class="navbar__links">
+    <a href="index.html">Головна</a>
+    <a href="catalog.html">Каталог авто</a>
+    <a href="services.html">Наші послуги</a>
+    <a href="about.html">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+  <div class="navbar__actions">
+    <a href="login.html" class="btn btn-outline" style="color:#94a3b8;border-color:#334155;">Вхід</a>
+  </div>
+</nav>
+
+<!-- ФОРМА РЕЄСТРАЦІЇ -->
+<div class="auth-page">
+  <div class="auth-box" style="max-width:480px;">
+
+    <div class="auth-box__logo">
+      <div class="auth-box__logo-text">GlobalDrive <span>Auto</span> </div>
+    </div>
+
+    <h1 class="auth-box__title">Реєстрація</h1>
+
+
+    <!-- Повідомлення -->
+    <div id="alert-box" style="display:none;" class="alert mb-16"></div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first_name">👤 Ім'я *</label>
+          <input
+            type="text"
+            id="first_name"
+            class="form-control"
+            autocomplete="given-name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="last_name">👤 Прізвище *</label>
+          <input
+            type="text"
+            id="last_name"
+            class="form-control"
+            autocomplete="family-name"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">📱 Номер телефону *</label>
+        <input
+          type="tel"
+          id="phone"
+          class="form-control"
+          placeholder="+380XXXXXXXXX"
+          autocomplete="tel"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">✉️ Email (необов'язково)</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">🔒 Пароль *</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Мінімум 6 символів"
+          autocomplete="new-password"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password2">🔒 Повторіть пароль *</label>
+        <input
+          type="password"
+          id="password2"
+          class="form-control"
+          autocomplete="new-password"
+        />
+      </div>
+
+      <button id="reg-btn" class="btn btn-primary btn-lg btn-full" onclick="handleRegister()">
+        Зареєструватись
+      </button>
+
+    </div>
+
+    <div class="auth-divider mt-16">або</div>
+
+    <p class="text-center text-sm text-muted mt-12">
+      Вже є акаунт?
+      <a href="login.html" style="font-weight:600;">Увійти</a>
+    </p>
+
+    <p class="text-center text-sm text-muted mt-8">
+      <a href="index.html">← Повернутись на головну</a>
+    </p>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  // Якщо вже залогінений — редірект
+  if (localStorage.getItem('token')) {
+    window.location.href = 'cabinet.html';
+  }
+</script>
+</body>
+</html>

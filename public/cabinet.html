@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Особистий кабінет — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .cabinet-header {
+      background: linear-gradient(135deg, var(--bg-nav) 0%, #1e3a6e 100%);
+      color: #fff;
+      padding: 40px 20px;
+    }
+    .cabinet-user {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .cabinet-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--bg-nav);
+      flex-shrink: 0;
+    }
+    .cabinet-name {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .cabinet-meta {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .request-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+    .request-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .request-card__id {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .request-card__date {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+    .request-card__row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 0.875rem;
+    }
+    .request-card__label {
+      color: var(--text-muted);
+      min-width: 100px;
+    }
+    .request-card__value {
+      color: var(--text);
+      font-weight: 500;
+    }
+    .search-context-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      margin-top: 8px;
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="index.html" class="navbar__logo">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:90px;"/>
+  </a>
+  <div class="navbar__links">
+    <a href="index.html">Головна</a>
+    <a href="catalog.html">Каталог авто</a>
+    <a href="services.html">Наші послуги</a>
+    <a href="about.html">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+  <div class="navbar__actions" id="navbar-actions"></div>
+</nav>
+
+<!-- ── ШАПКА КАБІНЕТУ ── -->
+<div class="cabinet-header">
+  <div class="container">
+    <div class="cabinet-user">
+      <div class="cabinet-avatar" id="cab-avatar">--</div>
+      <div>
+        <div class="cabinet-name" id="cab-name">Завантаження...</div>
+        <div class="cabinet-meta">
+          <span id="cab-phone">📱 —</span>
+          <span id="cab-email" style="display:none;">✉️ —</span>
+          <span id="cab-type" style="display:none;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── КОНТЕНТ ── -->
+<div class="page-wrapper">
+
+  <!-- ТАБИ -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('profile', this)">👤 Профіль</button>
+    <button class="tab-btn" onclick="switchTab('requests', this)">📋 Мої заявки</button>
+    <button class="tab-btn" onclick="switchTab('orders', this)">🚢 Відстежити авто</button>
+  </div>
+
+  <!-- ── ТАБ: ПРОФІЛЬ ── -->
+  <div id="tab-profile" class="tab-content">
+    <div class="card">
+      <div id="alert-profile" style="display:none;" class="alert mb-16"></div>
+
+      <h2 class="section-title mb-16">Особисті дані</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ім'я</label>
+          <input type="text" id="p-first-name" class="form-control"/>
+        </div>
+        <div class="form-group">
+          <label>Прізвище</label>
+          <input type="text" id="p-last-name" class="form-control"/>
+        </div>
+      </div>
+
+      <div class="form-group mt-16">
+        <label>Телефон</label>
+        <input type="tel" id="p-phone" class="form-control" disabled/>
+        <span class="form-hint">Телефон неможливо змінити (використовується для входу)</span>
+      </div>
+
+      <div class="form-group mt-16">
+        <label>Email</label>
+        <input type="email" id="p-email" class="form-control"/>
+      </div>
+
+      <button id="save-btn" class="btn btn-primary mt-24" onclick="saveProfile()">
+        💾 Зберегти зміни
+      </button>
+    </div>
+  </div>
+
+  <!-- ── ТАБ: ЗАЯВКИ ── -->
+  <div id="tab-requests" class="tab-content" style="display:none;">
+
+    <div id="req-loading" class="loading-box">
+      <div class="spinner"></div>
+      <span>Завантаження заявок...</span>
+    </div>
+
+    <div id="req-list"></div>
+
+    <div id="req-empty" class="empty-state" style="display:none;">
+      <div class="empty-state__icon">📋</div>
+      <div class="empty-state__title">Заявок ще немає</div>
+      <div class="empty-state__text">Перегляньте каталог і залиште заявку на цікаве для вас авто</div>
+      <a href="catalog.html" class="btn btn-primary mt-16">🚗 До каталогу</a>
+    </div>
+  </div>
+
+  <!-- ── ТАБ: ЗАМОВЛЕННЯ ── -->
+  <div id="tab-orders" class="tab-content" style="display:none;">
+
+    <div id="ord-loading" class="loading-box">
+      <div class="spinner"></div>
+      <span>Завантаження замовлень...</span>
+    </div>
+
+    <div id="ord-list"></div>
+
+    <div id="ord-empty" class="empty-state" style="display:none;">
+      <div class="empty-state__icon">🚢</div>
+      <div class="empty-state__title">Замовлень ще немає</div>
+      <div class="empty-state__text">Тут з'явиться ваше авто після оформлення замовлення</div>
+      <a href="catalog.html" class="btn btn-primary mt-16">🚗 До каталогу</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:100px;margin:0 auto 12px;display:block;"/>
+    <p>📍 Львів, Україна &nbsp;|&nbsp; 📱 +380 98 639 79 81 &nbsp;|&nbsp; ✉️ info@globaldrive.ua</p>
+    <p style="font-size:0.8rem;color:#475569;margin-top:8px;">© 2026 GlobalDrive Auto. Всі права захищені.</p>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script src="js/cabinet.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Каталог авто — GlobalDrive Auto</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="index.html" class="navbar__logo">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:90px;"/>
+  </a>
+  <div class="navbar__links">
+    <a href="index.html">Головна</a>
+    <a href="catalog.html" class="active">Каталог авто</a>
+    <a href="services.html">Наші послуги</a>
+    <a href="about.html">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+  <div class="navbar__actions" id="navbar-actions"></div>
+</nav>
+
+<!-- ── HERO КАТАЛОГУ ── -->
+<div style="background:linear-gradient(135deg,var(--bg-nav) 0%,#1e3a6e 100%);padding:36px 20px;">
+  <div class="container">
+    <div class="breadcrumb" style="color:#64748b;">
+      <a href="index.html" style="color:#64748b;">Головна</a>
+      <span class="sep">›</span>
+      <span style="color:#94a3b8;">Каталог авто</span>
+    </div>
+    <h1 style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:#fff;margin-bottom:8px;">
+      Каталог авто
+    </h1>
+    <p style="color:#94a3b8;">Авто в наявності та під замовлення з США</p>
+  </div>
+</div>
+
+<!-- ── ОСНОВНИЙ КОНТЕНТ ── -->
+<div class="page-wrapper">
+
+  <!-- ТАБИ: В наявності / В дорозі / Під замовлення -->
+  <div class="tabs" id="status-tabs">
+    <button class="tab-btn active" onclick="switchTab('available', this)">🚗 В наявності</button>
+    <button class="tab-btn" onclick="switchTab('transit', this)">🚢 В дорозі</button>
+    <button class="tab-btn" onclick="switchTab('auction', this)">🔨 На аукціоні</button>
+  </div>
+<!-- ФІЛЬТРИ  -->
+  <div id="filters-block" class="filters-panel">
+    <div class="filters-panel__grid">
+      <div class="form-group">
+        <label>Марка</label>
+        <select id="f-make" class="form-control" onchange="onMakeChange()">
+          <option value="">Всі марки</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Модель</label>
+        <select id="f-model" class="form-control" onchange="applyFilters()">
+          <option value="">Всі моделі</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Тип пального</label>
+        <select id="f-fuel" class="form-control" onchange="applyFilters()">
+          <option value="">Будь-яке</option>
+          <option value="бензин">Бензин</option>
+          <option value="дизель">Дизель</option>
+          <option value="електро">Електро</option>
+          <option value="гібрид">Гібрид</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Коробка передач</label>
+        <select id="f-trans" class="form-control" onchange="applyFilters()">
+          <option value="">Будь-яка</option>
+          <option value="автомат">Автомат</option>
+          <option value="механіка">Механіка</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Рік від</label>
+        <select id="f-year-from" class="form-control" onchange="applyFilters()">
+          <option value="">Будь-який</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Рік до</label>
+        <select id="f-year-to" class="form-control" onchange="applyFilters()">
+          <option value="">Будь-який</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Ціна від ($)</label>
+        <input id="f-price-from" type="number" min="0" class="form-control" placeholder="0" oninput="applyFilters()"/>
+      </div>
+      <div class="form-group">
+        <label>Ціна до ($)</label>
+        <input id="f-price-to" type="number" min="0" class="form-control" placeholder="100000" oninput="applyFilters()"/>
+      </div>
+      <div class="form-group">
+        <label>Пробіг від (км)</label>
+        <input id="f-odo-from" type="number" min="0" class="form-control" placeholder="0" oninput="applyFilters()"/>
+      </div>
+      <div class="form-group">
+        <label>Пробіг до (км)</label>
+        <input id="f-odo-to" type="number" min="0" class="form-control" placeholder="200000" oninput="applyFilters()"/>
+      </div>
+      <div class="form-group">
+        <label>Сортувати за</label>
+        <select id="f-sort" class="form-control" onchange="applyFilters()">
+          <option value="">— Без сортування —</option>
+          <option value="price-asc">💰 Ціна (від дешевих)</option>
+          <option value="price-desc">💰 Ціна (від дорогих)</option>
+          <option value="year-desc">📅 Рік (новіші спочатку)</option>
+          <option value="year-asc">📅 Рік (старіші спочатку)</option>
+          <option value="odo-asc">🛣️ Пробіг (менший спочатку)</option>
+          <option value="odo-desc">🛣️ Пробіг (більший спочатку)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-ghost btn-full" onclick="resetFilters()">✕ Скинути</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЛІЧИЛЬНИК РЕЗУЛЬТАТІВ -->
+  <div class="flex-between mb-16" id="results-bar" style="display:none!important;">
+    <span id="results-count" class="text-muted text-sm"></span>
+  </div>
+
+  <!-- ЛОАДЕР -->
+  <div id="cars-loading" class="loading-box">
+    <div class="spinner"></div>
+    <span>Завантаження авто...</span>
+  </div>
+
+  <!-- СІТКА АВТО -->
+  <div id="cars-grid" class="cars-grid" style="display:none;"></div>
+
+  <!-- ПОРОЖНЬО -->
+  <div id="cars-empty" class="empty-state" style="display:none;">
+    <div class="empty-state__icon">🔍</div>
+    <div class="empty-state__title">Авто не знайдено</div>
+    <div class="empty-state__text">Спробуйте змінити фільтри або залиште заявку на пригін під замовлення</div>
+    <button class="btn btn-primary mt-16" onclick="openRequestModal()">📋 Залишити заявку</button>
+  </div>
+
+  <!-- БАНЕР "ПРИГІН ПІД ЗАМОВЛЕННЯ" — завжди внизу в табі "в наявності" -->
+  <div id="order-banner" class="card mt-32" style="display:none;border:2px dashed var(--primary);background:var(--primary-light);">
+    <div class="flex-between" style="flex-wrap:wrap;gap:16px;">
+      <div>
+        <div style="font-size:1.5rem;margin-bottom:6px;">🌎</div>
+        <h3 style="font-family:var(--font-head);font-weight:700;font-size:1.1rem;margin-bottom:4px;">
+          Не знайшли потрібне авто?
+        </h3>
+        <p class="text-muted text-sm">
+          Залиште заявку — підберемо авто під ваш бюджет
+        </p>
+      </div>
+      <button class="btn btn-primary" onclick="openRequestModal()">
+        📋 Залишити заявку 
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── МОДАЛКА ЗАЯВКИ ── -->
+<div class="modal-overlay" id="request-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">🚗 Замовити пригін авто</h3>
+      <button class="modal__close" onclick="closeRequestModal()">✕</button>
+    </div>
+
+    <p class="text-muted text-sm mb-16">
+      Менеджер підбере авто на аукціоні під ваш бюджет і побажання
+    </p>
+
+    <div id="modal-alert" style="display:none;" class="alert mb-16"></div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="form-group">
+        <label>Ваше ім'я *</label>
+        <input type="text" id="req-name" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Телефон *</label>
+        <input type="tel" id="req-phone" class="form-control" placeholder="+380XXXXXXXXX"/>
+      </div>
+
+
+      <button class="btn btn-primary btn-lg btn-full" onclick="submitRequest()">
+        Надіслати заявку
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:100px;margin:0 auto 12px;display:block;"/>
+    <p>📍 Львів, Україна &nbsp;|&nbsp; 📱 +380 XX XXX XX XX &nbsp;|&nbsp; ✉️ info@globaldrive.ua</p>
+    <p style="font-size:0.8rem;color:#475569;margin-top:8px;">© 2026 GlobalDrive Auto. Всі права захищені.</p>
+  </div>
+</footer>
+
+<script src="js/auth.js"></script>
+<script src="js/catalog.js"></script>
+</body>
+</html>

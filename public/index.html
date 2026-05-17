@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GlobalDrive Auto — Пригін авто з США</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    /* ── Додаткові стилі тільки для головної ── */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .why-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      text-align: center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .why-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .why-card__icon {
+      font-size: 2.5rem;
+      margin-bottom: 14px;
+    }
+    .why-card__title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+    .why-card__text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0;
+      margin-top: 32px;
+      position: relative;
+    }
+    .step {
+      text-align: center;
+      padding: 20px 16px;
+      position: relative;
+    }
+    .step__num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .step__title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    .step__text {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .section {
+      padding: 60px 20px;
+    }
+    .section--gray {
+      background: #f1f5f9;
+    }
+    .section__header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="index.html" class="navbar__logo">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:100px;"/>
+  </a>
+  <div class="navbar__links">
+    <a href="index.html" class="active">Головна</a>
+    <a href="catalog.html">Каталог авто</a>
+    <a href="services.html">Наші послуги</a>
+    <a href="about.html">Про нас</a>
+    <a href="contacts.html">Контакти</a>
+  </div>
+  <div class="navbar__actions" id="navbar-actions">
+    <!-- Заповнюється через auth.js -->
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="container">
+    <h1 class="hero__title">
+      Авто з США <span>без зайвих витрат</span>
+    </h1>
+    <p class="hero__sub">
+      Пригін, розмитнення, доставка під ключ.<br/>
+      Понад 500 успішних замовлень — ваш автомобіль вже чекає.
+    </p>
+    <div class="hero__actions">
+      <a href="catalog.html" class="btn btn-primary btn-lg">🚗 Переглянути каталог</a>
+      <a href="catalog.html#request" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.3);">
+        📋 Залишити заявку
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ЧОМУ МИ ── -->
+<section class="section">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section-title">Чому обирають GlobalDrive Auto?</h2>
+      <p class="section-sub">Ми працюємо прозоро і з гарантією результату</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-card__icon">🏆</div>
+        <div class="why-card__title">Перевірені авто</div>
+        <div class="why-card__text">Перевіряємо кожне авто за VIN-кодом на аукціонах Copart та IAAI</div>
+      </div>
+      <div class="why-card">
+        <div class="why-card__icon">📍</div>
+        <div class="why-card__title">Онлайн трекінг</div>
+        <div class="why-card__text">Відстежуйте статус доставки вашого авто в реальному часі</div>
+      </div>
+      <div class="why-card">
+        <div class="why-card__icon">💰</div>
+        <div class="why-card__title">Прозора ціна</div>
+        <div class="why-card__text">Ніяких прихованих платежів. Всі витрати прораховуємо заздалегідь</div>
+      </div>
+      <div class="why-card">
+        <div class="why-card__icon">🤝</div>
+        <div class="why-card__title">Менеджер 24/7</div>
+        <div class="why-card__text">Особистий менеджер веде вас від вибору авто до отримання ключів</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ОСТАННІ АВТО ── -->
+<section class="section section--gray">
+  <div class="container">
+    <div class="flex-between mb-24">
+      <div>
+        <h2 class="section-title">Авто в наявності</h2>
+        <p class="section-sub">Готові до продажу прямо зараз</p>
+      </div>
+      <a href="catalog.html" class="btn btn-outline">Всі авто →</a>
+    </div>
+
+    <!-- Лоадер -->
+    <div id="cars-loading" class="loading-box">
+      <div class="spinner"></div>
+      <span>Завантаження авто...</span>
+    </div>
+
+    <!-- Сітка авто -->
+    <div id="cars-grid" class="cars-grid" style="display:none;"></div>
+
+    <!-- Порожньо -->
+    <div id="cars-empty" class="empty-state" style="display:none;">
+      <div class="empty-state__icon">🚗</div>
+      <div class="empty-state__title">Авто відсутні</div>
+      <div class="empty-state__text">Наразі немає доступних авто</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ЯК МИ ПРАЦЮЄМО ── -->
+<section class="section">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section-title">Як це працює?</h2>
+      <p class="section-sub">Від заявки до ключів — 4 простих кроки</p>
+    </div>
+    <div class="steps-row">
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__title">Залишаєте заявку</div>
+        <div class="step__text">Обираєте авто або вказуєте ваш номер телефону — менеджер зв'яжеться з вами</div>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__title">Підбір та аукціон</div>
+        <div class="step__text">Знаходимо авто на аукціоні Copart або IAAI та викупляємо його</div>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__title">Доставка в Україну</div>
+        <div class="step__text">Транспортуємо морем, проходимо митницю та розмитнення</div>
+      </div>
+      <div class="step">
+        <div class="step__num">4</div>
+        <div class="step__title">Отримуєте авто</div>
+        <div class="step__text">Передаємо авто з усіма документами. Ви задоволені — ми раді!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section style="background:linear-gradient(135deg,var(--bg-nav) 0%,#1e3a6e 100%);padding:60px 20px;text-align:center;">
+  <h2 style="font-family:var(--font-head);font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:12px;">
+    Готові замовити авто?
+  </h2>
+  <p style="color:#94a3b8;margin-bottom:28px;font-size:1rem;">
+    Залиште заявку — менеджер зв'яжеться з вами протягом години
+  </p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <a href="catalog.html" class="btn btn-primary btn-lg">Переглянути каталог</a>
+    <a href="register.html" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.3);">
+      Створити акаунт
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <img src="images/logo.png" alt="GlobalDrive Auto" style="height:100px;margin:0 auto 12px;display:block;"/>
+    <p style="margin-bottom:8px;">
+      📍 Львів, Україна &nbsp;|&nbsp; 📱 +380 98 639 79 81 &nbsp;|&nbsp; ✉️ info@globaldrive.ua
+    </p>
+    <p style="font-size:0.8rem;color:#475569;">
+      © 2026 GlobalDrive Auto. Всі права захищені.
+    </p>
+  </div>
+</footer>
+
+<!-- СКРИПТИ -->
+<script src="js/auth.js"></script>
+<script>
+  // Navbar — показати юзера або кнопки входу
+  renderNavUser();
+
+  // Завантажити останні 4 авто
+  async function loadCars() {
+    try {
+      const res = await fetch(`${API}/cars`);
+      const cars = await res.json();
+
+      document.getElementById('cars-loading').style.display = 'none';
+
+      if (!cars.length) {
+        document.getElementById('cars-empty').style.display = 'block';
+        return;
+      }
+
+      // Показуємо тільки перші 4
+      const grid = document.getElementById('cars-grid');
+      grid.style.display = 'grid';
+
+      cars.slice(0, 4).forEach(car => {
+        grid.innerHTML += `
+          <div class="car-card" onclick="window.location='car.html?id=${car.car_id}'">
+            <div class="car-card__img" ${car.image ? `style="background-image:url('${car.image}');background-size:cover;background-position:center;font-size:0;"` : ''}>${car.image ? '' : '🚗'}</div>
+            <div class="car-card__body">
+              <div class="car-card__title">${car.make} ${car.model}</div>
+              <div class="car-card__meta">
+                <span>📅 ${car.manufacture_year}</span>
+                <span>⛽ ${car.fuel_type || '—'}</span>
+                <span>⚙️ ${car.transmission || '—'}</span>
+                 <span>🎨 ${car.color || '—'}</span>
+                ${car.odometer ? `<span>🛣️ ${Number(car.odometer).toLocaleString()} км</span>` : ''}
+              </div>
+              <div class="car-card__price">
+                $${Number(car.selling_price).toLocaleString()}
+              </div>
+              <span class="badge badge-success mt-8">В наявності</span>
+            </div>
+          </div>
+        `;
+      });
+
+    } catch (err) {
+      document.getElementById('cars-loading').style.display = 'none';
+      document.getElementById('cars-empty').style.display = 'block';
+    }
+  }
+
+  loadCars();
+</script>
+</body>
+</html>
