@@ -12,7 +12,7 @@ const db = mysql.createPool({
 
 // Отримати всіх клієнтів (GET)
 // Паролі тут ми не витягуємо заради безпеки
-router.get('/', requireAdmin, (req, res) => {
+router.get('/', requireEmployee, (req, res) => {
     db.query('SELECT client_id, first_name, last_name, phone, email, client_type, created_at FROM Clients', (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);

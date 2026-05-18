@@ -223,7 +223,7 @@ async function loadRequests() {
     if (currentEmployee.position !== 'Адміністратор') {
       url = `${API}/requests/manager/${currentEmployee.employee_id}`;
     }
-    const res = await fetch(url);
+    const res = await apiFetch(url);
     let requests = await res.json();
     
     // Для менеджера підставляємо його імя у всі заявки (API повертає без менеджера)
@@ -398,7 +398,7 @@ tbody.innerHTML = orders.map(o => {
     <tr>
       <td>#${o.order_id}</td>
       <td>${o.client_first || ''} ${o.client_last || ''}<br><span class="text-muted text-sm">${o.client_phone || ''}</span></td>
-      <td>${o.make || ''} ${o.model || ''}</td>
+      <td>#${o.car_id} — ${o.make || ''} ${o.model || ''}</td>
       <td><strong>$${Number(o.total_amount || 0).toLocaleString()}</strong></td>
       <td>${getPaymentBadge(o.payment_status)}</td>
       <td>${getOrderStatusBadge(o.order_status)}</td>
@@ -501,7 +501,7 @@ async function saveOrder() {
     const url = currentEditId ? `${API}/orders/${currentEditId}` : `${API}/orders`;
     const method = currentEditId ? 'PUT' : 'POST';
 
-    const res = await fetch(url, {
+    const res = await apiFetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -815,7 +815,7 @@ async function saveClient() {
     const url    = currentEditId ? `${API}/clients/${currentEditId}` : `${API}/clients`;
     const method = currentEditId ? 'PUT' : 'POST';
 
-    const res = await fetch(url, {
+    const res = await apiFetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
