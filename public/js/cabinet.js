@@ -156,7 +156,7 @@ async function loadRequests() {
   emptyEl.style.display = 'none';
 
   try {
-    const res = await fetch(`${API}/requests/client/${encodeURIComponent(currentClient.phone)}`);
+    const res = await fetch(`${API}/requests/client/${encodeURIComponent(currentClient.phone)}`, { headers: { Authorization: "Bearer " + localStorage.getItem("token") } });
     const requests = await res.json();
 
     loadingEl.style.display = 'none';
