@@ -94,8 +94,16 @@ router.put('/:id', requireAdmin, (req, res) => {
 
 // Видалити авто (DELETE)
 router.delete('/:id', requireAdmin, (req, res) => {
-    db.query('DELETE FROM Cars WHERE car_id = ?', [req.params.id], (err) => {
-        if (err) return res.status(500).json({ error: err.message });
+    db.query('DELETE FROM Cars WHERE car_id = ?', [req.params.id], (err, result) => {
+        if (err) {
+            // Перевіряємо чи це помилка зовнішнього ключа
+            if (err.code === 'ER_ROW_IS_REFERENCED_2' || err.errno === 1451) {
+                return res.status(409).json({
+                    error: 'Неможливо видалити авто: на нього є активне замовлення. Спочатку видаліть або скасуйте відповідне замовлення.'
+                });
+            }
+            return res.status(500).json({ error: err.message });
+        }
         res.json({ message: 'Авто видалено!' });
     });
 });

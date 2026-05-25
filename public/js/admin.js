@@ -581,6 +581,11 @@ function renderCars(cars) {
   `).join('');
 }
 
+
+
+
+
+
 function filterCars() {
   const search = document.getElementById('car-search').value.toLowerCase();
   const status = document.getElementById('car-filter-status').value;
@@ -708,6 +713,36 @@ async function saveCar() {
     showModalAlert('cm-alert', '❌ Сервер недоступний');
   }
 }
+
+/* ── ВИДАЛЕННЯ АВТО ── */
+async function deleteCar(id) {
+  const car = allCars.find(x => x.car_id === id);
+  const carInfo = car ? `${car.make} ${car.model} (#${id})` : `#${id}`;
+
+  if (!confirm(`Ви впевнені, що хочете видалити авто ${carInfo}?\nЦю дію неможливо скасувати.`)) {
+    return;
+  }
+
+  try {
+    const res = await apiFetch(`${API}/cars/${id}`, { method: 'DELETE' });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert(`❌ ${err.error || 'Не вдалося видалити авто'}`);
+      return;
+    }
+
+    loadCars();
+  } catch (err) {
+    console.error('Помилка видалення авто:', err);
+    alert('❌ Сервер недоступний');
+  }
+}
+
+
+
+
+
 
 /* ════════════════════════════════════════
    👥 КЛІЄНТИ
