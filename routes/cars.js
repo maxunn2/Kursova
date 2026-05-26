@@ -9,6 +9,50 @@ const db = mysql.createPool({
     database: process.env.DB_NAME
 });
 
+// Доступні для вибору в заявках/ордерах — з фільтрацією за роллю
+router.get('/available', requireEmployee, (req, res) => {
+    const position = req.employee.position;
+    const includeId = req.query.include ? parseInt(req.query.include) : null;
+
+    // Визначаємо допустимі статуси за роллю
+    let allowedStatuses;
+    if (position === 'Адміністратор') {
+        allowedStatuses = ['в наявності', 'в дорозі', 'на аукціоні'];
+    } else if (position === 'Менеджер авто в наявності') {
+        allowedStatuses = ['в наявності'];
+    } else if (position === 'Менеджер з пригону') {
+        allowedStatuses = ['в дорозі', 'на аукціоні'];
+    } else {
+        allowedStatuses = [];
+    }
+
+    // Якщо для ролі немає допустимих статусів — повертаємо тільки include-авто (для редагування)
+    if (allowedStatuses.length === 0) {
+        if (includeId) {
+            return db.query('SELECT * FROM Cars WHERE car_id = ?', [includeId], (e, r) => {
+                if (e) return res.status(500).json({ error: e.message });
+                res.json(r);
+            });
+        }
+        return res.json([]);
+    }
+
+    // Допустимі статуси АБО конкретне авто (для редагування ордера)
+    let query = `SELECT * FROM Cars WHERE car_status IN (?)`;
+    const params = [allowedStatuses];
+
+    if (includeId) {
+        query += ` OR car_id = ?`;
+        params.push(includeId);
+    }
+    query += ` ORDER BY car_id DESC`;
+
+    db.query(query, params, (err, cars) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(cars);
+    });
+});
+
 // Отримати всі авто в наявності
 router.get('/', (req, res) => {
     const { make, model, year_from, year_to, fuel_type, transmission } = req.query;

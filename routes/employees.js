@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { requireAdmin } = require('../middleware/auth');
+const { requireAdmin, requireEmployee } = require('../middleware/auth');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 
@@ -12,7 +12,7 @@ const db = mysql.createPool({
 });
 
 // Всі менеджери (GET) — без поля password
-router.get('/', requireAdmin,  (req, res) => {
+router.get('/', requireEmployee, (req, res) => {
     db.query('SELECT employee_id, first_name, last_name, phone, email, position, hire_date FROM Employees', (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
@@ -55,10 +55,19 @@ router.put('/:id', requireAdmin, async (req, res) => {
     }
 });
 
+
 // Видалити співробітника (DELETE)
 router.delete('/:id', requireAdmin, (req, res) => {
-    db.query('DELETE FROM Employees WHERE employee_id = ?', [req.params.id], (err) => {
-        if (err) return res.status(500).json({ error: err.message });
+    db.query('DELETE FROM Employees WHERE employee_id = ?', [req.params.id], (err, result) => {
+        if (err) {
+            // FK constraint — на менеджері є заявки/замовлення
+            if (err.code === 'ER_ROW_IS_REFERENCED_2' || err.errno === 1451) {
+                return res.status(409).json({
+                    error: 'Неможливо видалити співробітника: на нього призначені активні заявки або замовлення. Спочатку переназначте їх іншому менеджеру.'
+                });
+            }
+            return res.status(500).json({ error: err.message });
+        }
         res.json({ message: 'Співробітника видалено!' });
     });
 });

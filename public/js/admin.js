@@ -449,8 +449,13 @@ async function populateOrderSelects() {
   const clSel = document.getElementById('om-client');
   clSel.innerHTML = clients.map(c => `<option value="${c.client_id}">#${c.client_id} — ${c.first_name} ${c.last_name} (${c.phone})</option>`).join('');
 
- // Авто — всі статуси (в наявності + в дорозі + на аукціоні)
-  const carsRes = await apiFetch(`${API}/cars/all`);
+ // Авто — фільтрація за роллю; 
+  let carsUrl = `${API}/cars/available`;
+  if (currentEditId) {
+    const editingOrder = allOrders.find(x => x.order_id === currentEditId);
+    if (editingOrder) carsUrl += `?include=${editingOrder.car_id}`;
+  }
+  const carsRes = await apiFetch(carsUrl);
   const cars = await carsRes.json();
   const carSel = document.getElementById('om-car');
  carSel.innerHTML = cars.map(c => {
@@ -975,11 +980,31 @@ async function saveEmployee() {
 }
 
 async function deleteEmployee(id) {
-  if (!confirm(`Видалити співробітника #${id}?`)) return;
+  const emp = allEmployees.find(x => x.employee_id === id);
+  const empInfo = emp ? `${emp.first_name} ${emp.last_name} (#${id})` : `#${id}`;
+
+  if (!confirm(`Ви впевнені, що хочете видалити співробітника ${empInfo}?\nЦю дію неможливо скасувати.`)) {
+    return;
+  }
+
   try {
-    await apiFetch(`${API}/employees/${id}`, { method: 'DELETE' });
+    const res = await apiFetch(`${API}/employees/${id}`, { method: 'DELETE' });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      if (res.status === 409) {
+        alert(`⚠️ ${data.error}\n\nПерейдіть у розділи «Заявки» та «Замовлення», знайдіть записи цього менеджера і призначте їх іншому.`);
+      } else {
+        alert(`❌ ${data.error || 'Не вдалося видалити співробітника'}`);
+      }
+      return;
+    }
+
     loadEmployees();
-  } catch (err) { alert('Помилка'); }
+  } catch (err) {
+    console.error('Помилка видалення співробітника:', err);
+    alert('❌ Сервер недоступний');
+  }
 }
 
 function getPositionBadge(position) {
@@ -1209,8 +1234,8 @@ async function openNewRequestModal() {
   clSel.innerHTML = '<option value="">— Оберіть клієнта —</option>' +
     clients.map(c => `<option value="${c.client_id}" data-phone="${c.phone}" data-name="${c.first_name} ${c.last_name}">#${c.client_id} — ${c.first_name} ${c.last_name} (${c.phone})</option>`).join('');
 
-  // Завантажуємо авто
-  const carsRes = await apiFetch(`${API}/cars/all`);
+  // Завантажуємо авто (з фільтром за роллю)
+  const carsRes = await apiFetch(`${API}/cars/available`);
   const cars = await carsRes.json();
   const carSel = document.getElementById('nrm-car');
   carSel.innerHTML = '<option value="">— Не вказувати —</option>' +
